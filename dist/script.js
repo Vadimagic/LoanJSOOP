@@ -975,6 +975,29 @@ function () {
   }
 
   _createClass(VideoPlayer, [{
+    key: "bindTriggers",
+    value: function bindTriggers() {
+      var _this = this;
+
+      this.btns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var path = btn.getAttribute('data-url');
+          _this.player ? _this.overlay.style.display = 'flex' : _this.createPlayer(path);
+        });
+      });
+    }
+  }, {
+    key: "bindCloseBtn",
+    value: function bindCloseBtn() {
+      var _this2 = this;
+
+      this.close.addEventListener('click', function () {
+        _this2.overlay.style.display = 'none';
+
+        _this2.player.pauseVideo();
+      });
+    }
+  }, {
     key: "createPlayer",
     value: function createPlayer(url) {
       this.player = new YT.Player('frame', {
@@ -982,25 +1005,17 @@ function () {
         width: '100%',
         videoId: "".concat(url)
       });
-      console.log(this.player);
       this.overlay.style.display = 'flex';
     }
   }, {
     key: "init",
     value: function init() {
-      var _this = this;
-
       var tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      this.btns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var path = btn.getAttribute('data-url');
-
-          _this.createPlayer(path);
-        });
-      });
+      this.bindTriggers();
+      this.bindCloseBtn();
     }
   }]);
 

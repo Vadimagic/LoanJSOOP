@@ -5,14 +5,31 @@ export default class VideoPlayer {
 		this.close = this.overlay.querySelector('.close');
 	}
 
+	bindTriggers() {
+		this.btns.forEach(btn => {
+			btn.addEventListener('click', () => {
+				const path = btn.getAttribute('data-url');
+
+				this.player 
+					? this.overlay.style.display = 'flex'
+					: this.createPlayer(path);
+			});
+		});
+	}
+
+	bindCloseBtn() {
+		this.close.addEventListener('click', () => {
+			this.overlay.style.display = 'none';
+			this.player.pauseVideo();
+		});
+	}
+
 	createPlayer(url) {
 		this.player = new YT.Player('frame', {
 			height: '100%',
 			width: '100%',
 			videoId: `${url}`
 		});
-
-		console.log(this.player);
 		this.overlay.style.display = 'flex';
 	}
 
@@ -23,12 +40,7 @@ export default class VideoPlayer {
 		const firstScriptTag = document.getElementsByTagName('script')[0];
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-		this.btns.forEach(btn => {
-			btn.addEventListener('click', () => {
-				const path = btn.getAttribute('data-url');
-
-				this.createPlayer(path)
-			});
-		});
+		this.bindTriggers();
+		this.bindCloseBtn();
 	}
 }
