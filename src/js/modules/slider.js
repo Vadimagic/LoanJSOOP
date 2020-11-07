@@ -41,7 +41,6 @@ export default class SLider {
 	}
 
 	render() {
-		console.log(this.btns);
 		try {
 			this.hanson = document.querySelector('.hanson');
 		} catch (e) {}
