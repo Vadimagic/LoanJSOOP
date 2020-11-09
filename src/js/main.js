@@ -4,6 +4,7 @@ import MiniSlider from './modules/slider/slider-mini';
 import Difference from './modules/difference';
 import Form from './modules/forms';
 import ShowInfo from './modules/accordion';
+import Download from './modules/download';
 
 window.addEventListener('DOMContentLoaded', () => {
 	new MainSLider({
@@ -48,4 +49,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	new Form('.form').init();
 
 	new ShowInfo('.module__info-show .plus', '.msg').init();
+
+	new Download('.download').init();
 });
