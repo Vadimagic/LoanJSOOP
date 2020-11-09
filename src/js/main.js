@@ -33,9 +33,10 @@ window.addEventListener('DOMContentLoaded', () => {
 		next: '.feed__slider .slick-next',
 		activeClass: 'feed__item-active',
 	}).init();
+	
 	new VideoPlayer('.showup .play', '.overlay').init();
 
 	new Difference('.officerold', '.officernew', '.officer__card-item').init();
-	
+
 	new Form('.form').init();
 });
