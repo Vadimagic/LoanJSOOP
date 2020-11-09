@@ -5024,8 +5024,12 @@ __webpack_require__.r(__webpack_exports__);
 
 window.addEventListener('DOMContentLoaded', function () {
   new _modules_slider_slider_main__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    btns: '.next',
-    container: '.page'
+    container: '.page',
+    btns: '.next'
+  }).render();
+  new _modules_slider_slider_main__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    container: '.moduleapp',
+    btns: '.next'
   }).render();
   new _modules_slider_slider_mini__WEBPACK_IMPORTED_MODULE_2__["default"]({
     container: '.showup__content-slider',
@@ -5509,28 +5513,48 @@ function (_SLider) {
       this.showSlides(this.slideIndex += n);
     }
   }, {
-    key: "render",
-    value: function render() {
+    key: "bindArrows",
+    value: function bindArrows(trigger) {
       var _this2 = this;
 
-      try {
+      document.querySelectorAll(trigger).forEach(function (item) {
+        item.addEventListener('click', function (e) {
+          e.stopPropagation();
+          e.preventDefault();
+
+          _this2.plusSlides(trigger === '.prevmodule' ? -1 : 1);
+        });
+      });
+    }
+  }, {
+    key: "bindTriggers",
+    value: function bindTriggers() {
+      var _this3 = this;
+
+      this.btns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          _this3.plusSlides(1);
+        });
+        btn.parentNode.previousElementSibling.addEventListener('click', function (e) {
+          e.preventDefault();
+          _this3.slideIndex = 1;
+
+          _this3.showSlides(_this3.slideIndex);
+        });
+      });
+      this.bindArrows('.prevmodule');
+      this.bindArrows('.nextmodule');
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      if (this.container) {
         try {
           this.hanson = document.querySelector('.hanson');
+          this.bindTriggers();
+          this.showSlides(this.slideIndex);
         } catch (e) {}
-
-        this.btns.forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            _this2.plusSlides(1);
-          });
-          btn.parentNode.previousElementSibling.addEventListener('click', function (e) {
-            e.preventDefault();
-            _this2.slideIndex = 1;
-
-            _this2.showSlides(_this2.slideIndex);
-          });
-        });
-        this.showSlides(this.slideIndex);
-      } catch (e) {}
+      }
     }
   }]);
 

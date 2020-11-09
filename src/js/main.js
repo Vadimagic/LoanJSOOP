@@ -6,8 +6,13 @@ import Form from './modules/forms';
 
 window.addEventListener('DOMContentLoaded', () => {
 	new MainSLider({
-		btns: '.next', 
-		container: '.page'
+		container: '.page',
+		btns: '.next'
+	}).render();
+
+	new MainSLider({
+		container: '.moduleapp',
+		btns: '.next'
 	}).render();
 
 	new MiniSlider({
