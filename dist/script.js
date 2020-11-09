@@ -5079,6 +5079,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_slider_slider_mini__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/slider/slider-mini */ "./src/js/modules/slider/slider-mini.js");
 /* harmony import */ var _modules_difference__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/difference */ "./src/js/modules/difference.js");
 /* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/forms */ "./src/js/modules/forms.js");
+/* harmony import */ var _modules_accordion__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/accordion */ "./src/js/modules/accordion.js");
+
 
 
 
@@ -5118,7 +5120,78 @@ window.addEventListener('DOMContentLoaded', function () {
   new _modules_playVideo__WEBPACK_IMPORTED_MODULE_1__["default"]('.module__video-item .play', '.overlay').init();
   new _modules_difference__WEBPACK_IMPORTED_MODULE_3__["default"]('.officerold', '.officernew', '.officer__card-item').init();
   new _modules_forms__WEBPACK_IMPORTED_MODULE_4__["default"]('.form').init();
+  new _modules_accordion__WEBPACK_IMPORTED_MODULE_5__["default"]('.module__info-show .plus', '.msg').init();
 });
+
+/***/ }),
+
+/***/ "./src/js/modules/accordion.js":
+/*!*************************************!*\
+  !*** ./src/js/modules/accordion.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ShowInfo; });
+/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
+/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ShowInfo =
+/*#__PURE__*/
+function () {
+  function ShowInfo(btn, content) {
+    _classCallCheck(this, ShowInfo);
+
+    this.btns = document.querySelectorAll(btn);
+    this.contents = document.querySelectorAll(content);
+  }
+
+  _createClass(ShowInfo, [{
+    key: "toggleContent",
+    value: function toggleContent() {
+      var _this = this;
+
+      this.contents.forEach(function (content) {
+        content.setAttribute('data-hidden', 'true');
+      });
+      this.btns.forEach(function (btn, i) {
+        btn.addEventListener('click', function () {
+          console.log(_this.contents[i].getAttribute('data-hidden'));
+
+          if (_this.contents[i].getAttribute('data-hidden') === 'true') {
+            _this.contents[i].setAttribute('data-hidden', 'false');
+
+            _this.contents[i].classList.add('animated', 'fadeIn');
+
+            _this.contents[i].style.display = 'block';
+          } else {
+            _this.contents[i].setAttribute('data-hidden', 'true');
+
+            _this.contents[i].style.display = 'none';
+          }
+        });
+      });
+    }
+  }, {
+    key: "init",
+    value: function init() {
+      this.toggleContent();
+    }
+  }]);
+
+  return ShowInfo;
+}();
+
+
 
 /***/ }),
 
@@ -5424,24 +5497,34 @@ function () {
     value: function bindTriggers() {
       var _this = this;
 
-      this.btns.forEach(function (btn) {
+      this.btns.forEach(function (btn, i) {
+        try {
+          var blockedElem = btn.closest('.module__video-item').nextElementSibling;
+
+          if (i % 2 == 0) {
+            blockedElem.setAttribute('data-disabled', 'true');
+          }
+        } catch (e) {}
+
         btn.addEventListener('click', function () {
-          _this.activeBtn = btn;
+          if (!btn.closest('.module__video-item') || btn.closest('.module__video-item').getAttribute('data-disabled') !== 'true') {
+            _this.activeBtn = btn;
 
-          if (document.querySelector('iframe#frame')) {
-            _this.overlay.style.display = 'flex';
+            if (document.querySelector('iframe#frame')) {
+              _this.overlay.style.display = 'flex';
 
-            if (_this.path !== btn.getAttribute('data-url')) {
+              if (_this.path !== btn.getAttribute('data-url')) {
+                _this.path = btn.getAttribute('data-url');
+
+                _this.player.loadVideoById({
+                  videoId: _this.path
+                });
+              }
+            } else {
               _this.path = btn.getAttribute('data-url');
 
-              _this.player.loadVideoById({
-                videoId: _this.path
-              });
+              _this.createPlayer(_this.path);
             }
-          } else {
-            _this.path = btn.getAttribute('data-url');
-
-            _this.createPlayer(_this.path);
           }
         });
       });
@@ -5486,6 +5569,7 @@ function () {
             blockedElem.querySelector('.play__text').classList.remove('attention');
             blockedElem.style.opacity = 1;
             blockedElem.style.filter = 'none';
+            blockedElem.setAttribute('data-disabled', 'false');
           }
         }
       } catch (e) {}

@@ -7,21 +7,30 @@ export default class VideoPlayer {
 	}
 
 	bindTriggers() {
-		this.btns.forEach(btn => {
+		this.btns.forEach((btn, i) => {
+			try {
+				const blockedElem = btn.closest('.module__video-item').nextElementSibling;
+				if (i % 2 == 0) {
+					blockedElem.setAttribute('data-disabled', 'true');
+				}
+			} catch(e) {}
+
 			btn.addEventListener('click', () => {
-				this.activeBtn = btn;
+				if (!btn.closest('.module__video-item') || btn.closest('.module__video-item').getAttribute('data-disabled') !== 'true') {
+					this.activeBtn = btn;
 
-				if (document.querySelector('iframe#frame')) {
-					this.overlay.style.display = 'flex';
-					if (this.path !== btn.getAttribute('data-url')) {
-						 this.path = btn.getAttribute('data-url');
-						 this.player.loadVideoById({videoId: this.path});
+					if (document.querySelector('iframe#frame')) {
+						this.overlay.style.display = 'flex';
+						if (this.path !== btn.getAttribute('data-url')) {
+							this.path = btn.getAttribute('data-url');
+							this.player.loadVideoById({videoId: this.path});
+						}
+					} else {
+							this.path = btn.getAttribute('data-url');
+
+							this.createPlayer(this.path);
 					}
-			  } else {
-					this.path = btn.getAttribute('data-url');
-
-					this.createPlayer(this.path);
-			  }
+				}
 			});
 		});
 	}
@@ -59,6 +68,7 @@ export default class VideoPlayer {
 					blockedElem.querySelector('.play__text').classList.remove('attention');
 					blockedElem.style.opacity = 1;
 					blockedElem.style.filter = 'none';
+					blockedElem.setAttribute('data-disabled', 'false');
 				}
 			}
 		} catch(e) {}
